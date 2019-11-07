@@ -58,7 +58,13 @@ namespace ProcessMining
         }
         static void Main(string[] args)
         {
-            TestPetriNetTest1();
+            string logPath =
+                "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes";
+ 
+
+            //AlphaMiner.test_alpha_miner(logPath);
+            ConformanceChecking.TestConformanceChecking();
+
         }
     }
 }
