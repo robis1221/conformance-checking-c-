@@ -60,11 +60,12 @@ namespace ProcessMining
         {
             string logPath =
                 "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes";
- 
+
 
             //AlphaMiner.test_alpha_miner(logPath);
-            ConformanceChecking.TestConformanceChecking();
-
+            // ConformanceChecking.TestConformanceChecking();
+            AlignmentBased ab = new AlignmentBased();
+            ab.TestAlignment();
         }
     }
 }
