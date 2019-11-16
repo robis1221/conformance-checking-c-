@@ -34,7 +34,7 @@ namespace ProcessMining
             return new List<HashSet<string>>(){startTransitions,transitionSet,endTransitions};
         }
 
-        private static HashSet<Tuple<string, string>> GetDirectSuccessions(Dictionary<List<string>, int> trace_frequencies)
+        public static HashSet<Tuple<string, string>> GetDirectSuccessions(Dictionary<List<string>, int> trace_frequencies)
         {
             HashSet<Tuple<string, string>> directSuccession = new HashSet<Tuple<string, string>>();
             foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)

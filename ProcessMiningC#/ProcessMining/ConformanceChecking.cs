@@ -106,15 +106,24 @@ namespace ProcessMining
 
         public static void TestConformanceChecking()
         {
-            var log = FileParser.ParseXES(
-                "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes");
-            var log_noisy =
+            Dictionary<List<string>, int> log = FileParser.ParseXES(
+                @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes");
+            Dictionary<List<string>, int> log_noisy =
                 FileParser.ParseXES(
-                    "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log-noisy.xes");
+                    @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log-noisy.xes");
 
-            var minedModel = AlphaMiner.mine(log);
+            PetriNet minedModel = AlphaMiner.mine(log);
+            
+            var casualFitness = CasualFootprints.CalculateCasualFootprintFitness(minedModel, log);
+            var casualFitnessNoisy = CasualFootprints.CalculateCasualFootprintFitness(minedModel, log_noisy);
+
+            Console.WriteLine($"CasualFootprint fitness of the same logs and model: {casualFitness}");
+            Console.WriteLine($"CasualFootprint fitness of the model and noisy logs: {casualFitnessNoisy}");
+
             Console.WriteLine(ConformanceChecking.TokenReplayFitness(log,minedModel));
             Console.WriteLine(ConformanceChecking.TokenReplayFitness(log_noisy, minedModel));
+
+            Console.ReadLine();
             
         }
     }

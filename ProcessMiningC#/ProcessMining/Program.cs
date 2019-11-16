@@ -59,10 +59,9 @@ namespace ProcessMining
         static void Main(string[] args)
         {
             string logPath =
-                "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes";
- 
+                @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes";
 
-            //AlphaMiner.test_alpha_miner(logPath);
+            AlphaMiner.test_alpha_miner(logPath);
             ConformanceChecking.TestConformanceChecking();
 
         }
