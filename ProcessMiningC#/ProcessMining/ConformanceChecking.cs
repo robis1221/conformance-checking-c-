@@ -91,8 +91,6 @@ namespace ProcessMining
                 foreach (var step in trace.Key)
                 {
                     var transitionId = minedNet.TransitionNameToId(step);
-                    var middle = minedNet.GetIdsOfParentPlaces(transitionId)
-                        .Select(x => minedNet.GetTokens(x)).ToList();
 
                     sequenceTokenInfo.remained += minedNet.GetIdsOfParentPlaces(transitionId)
                         .Select(x => minedNet.GetTokens(x)).ToList().Sum();
