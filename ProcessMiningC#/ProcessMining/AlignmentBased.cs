@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class AlignmentBased
 {
+    double totalFitness = 0;
+    int traceCount = 0;
     public AlignmentBased()
     {
     }
-    public void TestAlignment()
+    public double TestAlignment()
     {
         Dictionary<List<string>, int> trace_frequencies = FileParser.ParseXES(
               "D:\\DTU\\conformance-checking-c-\\ProcessMiningC#\\ProcessMining\\extension-log.xes");
@@ -15,8 +17,12 @@ public class AlignmentBased
             FileParser.ParseXES(
                 "D:\\DTU\\conformance-checking-c-\\ProcessMiningC#\\ProcessMining\\extension-log-noisy.xes");
         var minedNet = AlphaMiner.mine(trace_frequencies);
-        foreach (KeyValuePair<List<string>, int> trace in trace_frequencies_noisy)
+
+        AlignmentBased res = new AlignmentBased();
+        foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)
         {
+        res.traceCount += 1;
+            bool match = true;
             Console.WriteLine(" \n");
             minedNet.InitializeTokens();
             foreach (var step in trace.Key)
@@ -27,14 +33,20 @@ public class AlignmentBased
                 var isEnabled = minedNet.IsEnabled(transitionId);
                 if (!isEnabled)
                 {
+                    match = false;
                    // Console.WriteLine(step);
                     FindOptimalAlignment(trace,minedNet);
                     break;
                 }
                 minedNet.FireTransition(transitionId);
             }
-            
+            if (match == true)
+            {
+                res.totalFitness += 1;
+            }   
         }
+        Console.WriteLine(res.totalFitness / res.traceCount);
+        return (double) res.totalFitness / res.traceCount;
     }
     void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet)
     {
