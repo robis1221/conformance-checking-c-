@@ -291,7 +291,14 @@ namespace ProcessMining
         {
             var minedModel = AlphaMiner.mine(FileParser.ParseXES(pathToLog));
 
+
+
             List<string> trace =new List<string>(){"record issue", "inspection", "intervention authorization", "work mandate", "work completion", "issue completion"};
+
+            var cost = minedModel.GetShortestPath(minedModel.TransitionNameToId("inspection"),
+                minedModel.TransitionNameToId("issue completion"), null);
+
+            Console.WriteLine(cost);
 
             foreach (var a in trace)
             {

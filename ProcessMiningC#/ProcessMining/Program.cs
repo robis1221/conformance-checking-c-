@@ -64,6 +64,14 @@ namespace ProcessMining
             AlphaMiner.test_alpha_miner(logPath);
             ConformanceChecking.TestConformanceChecking();
 
+                //"C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes";
+
+
+
+            //AlphaMiner.test_alpha_miner(logPath);
+            // ConformanceChecking.TestConformanceChecking();
+            AlignmentBased ab = new AlignmentBased();
+            ab.TestAlignment();
         }
     }
 }
