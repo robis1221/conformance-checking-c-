@@ -195,7 +195,7 @@ namespace ProcessMining
             }
         }
 
-        public void FireTransition(int transitionId)
+        public bool FireTransition(int transitionId)
         {
             if (_transitions[transitionId].isActivated)
             {
@@ -223,6 +223,12 @@ namespace ProcessMining
                 {
                     this.AddMarking(0,kid);
                 }
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -414,33 +420,8 @@ namespace ProcessMining
                                 copyOfPetriNet.GetAllPathsBetweenTwoVertices(1, placeId);
                             var helpPaths = new List<int>();
 
-                            foreach (var pathFromEntranceToThisTransition in pathsFromEntranceToThisPlace)
-                            {
-                                // if there is a token in the last place of the path then we don't need to look for other one
-                                for (int index = pathFromEntranceToThisTransition.Count - 1; index >= 0; index--)
-                                {
-                                    if (pathFromEntranceToThisTransition[index] > 0)
-                                    {
-                                        if (0 != copyOfPetriNet.GetTokens(pathFromEntranceToThisTransition[index]))
-                                        {
-                                            if (index == pathFromEntranceToThisTransition.Count - 1)
-                                            {
-                                                // if there is a token in the last place of the path then we don't need to look for other one
-                                                break;
-                                            }
-                                            var count = pathFromEntranceToThisTransition.Count - index;
-                                            var portionToBeAddedToPath = pathFromEntranceToThisTransition.GetRange(index, count);
-                                            portionToBeAddedToPath = portionToBeAddedToPath.Where(a => a < 0).ToList();
-                                            foreach (var helpTransition in portionToBeAddedToPath)
-                                            {
-                                                copyOfPetriNet.FireTransition(helpTransition);
-                                            }
-                                            helpPaths.AddRange(portionToBeAddedToPath);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+                            GetTheFixingPathHelper(pathsFromEntranceToThisPlace, copyOfPetriNet, helpPaths);
+                            
                             finalPath.AddRange(helpPaths);
                         }
                     }
@@ -449,6 +430,53 @@ namespace ProcessMining
             }
             finalPath.AddRange(path);
             return finalPath;
+        }
+
+        private void GetTheFixingPathHelper(List<List<int>> paths, PetriNet net, List<int> fixingPath)
+        {
+            foreach (var pathFromEntranceToThisTransition in paths)
+            {
+                // if there is a token in the last place of the path then we don't need to look for other one
+                for (int index = pathFromEntranceToThisTransition.Count - 1; index >= 0; index--)
+                {
+                    if (pathFromEntranceToThisTransition[index] > 0)
+                    {
+                        if (0 != net.GetTokens(pathFromEntranceToThisTransition[index]))
+                        {
+                            if (index == pathFromEntranceToThisTransition.Count - 1)
+                            {
+                                // if there is a token in the last place of the path then we don't need to look for other one
+                                break;
+                            }
+                            var count = pathFromEntranceToThisTransition.Count - index;
+                            var portionToBeAddedToPath = pathFromEntranceToThisTransition.GetRange(index, count);
+                            var portionToBeAddedToPathTransitionsOnly = portionToBeAddedToPath.Where(a => a < 0).ToList();
+                            for (int i = 0; i < portionToBeAddedToPathTransitionsOnly.Count; i++)
+                            {
+                                var helpTransition = portionToBeAddedToPathTransitionsOnly[i];
+                                var isFired = net.FireTransition(helpTransition);
+                                if (isFired)
+                                {
+                                    fixingPath.Add(helpTransition);
+                                }
+                                else
+                                {
+                                    var pathsUpToThisTransition = new List<List<int>>();
+                                    
+                                    for (int j = 0; j < paths.Count; j++)
+                                    {
+                                        var upperLimit = paths[j].IndexOf(helpTransition);
+                                        pathsUpToThisTransition.Add(paths[j].GetRange(0, upperLimit));
+                                    }
+                                    GetTheFixingPathHelper(pathsUpToThisTransition, net,fixingPath);
+                                    i--;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -471,6 +499,16 @@ namespace ProcessMining
             return paths;
         }
 
+        /// <summary>
+        /// Helper function to GetAllPathsBetweenTwoVertices it actually do BFS, heuristics could
+        /// be add if the distance from the observed node to the end is less than the in node to
+        /// the end
+        /// </summary>
+        /// <param name="id1"></param>
+        /// <param name="id2"></param>
+        /// <param name="visited"></param>
+        /// <param name="currentPath"></param>
+        /// <param name="paths"> Backtracking container</param>
         private void GetAllPathsBetweenTwoVerticesHelper(int id1, int id2, HashSet<int> visited, Stack<int> currentPath, List<List<int>> paths)
         {
             if (id1 == id2)

@@ -73,6 +73,9 @@ namespace ProcessMining
             p.AddPlace(10);
             p.AddPlace(11);
             p.AddPlace(12);
+            p.AddPlace(13);
+            p.AddPlace(14);
+            p.AddPlace(15);
 
             p.AddTransition(-1, "A");
             p.AddTransition(-2, "B");
@@ -85,6 +88,8 @@ namespace ProcessMining
             p.AddTransition(-9, "I");
             p.AddTransition(-10, "J");
             p.AddTransition(-11, "K");
+            p.AddTransition(-12, "L");
+            p.AddTransition(-13, "M");
 
             p.AddEdge(1, -1);
 
@@ -106,13 +111,22 @@ namespace ProcessMining
             p.AddEdge(5, -6);
             p.AddEdge(6, -7);
             p.AddEdge(7, -7);
-            p.AddEdge(8, -8);
-            p.AddEdge(9, -9);
+            p.AddEdge(8, -9);
+            p.AddEdge(9, -12);
+
+            p.AddEdge(-9, 13);
+            p.AddEdge(-12, 14);
+
+            p.AddEdge(13, -8);
+            p.AddEdge(14, -8);
 
             p.AddEdge(-6, 10);
             p.AddEdge(-7, 10);
-            p.AddEdge(-8, 11);
-            p.AddEdge(-9, 11);
+            p.AddEdge(-8, 15);
+
+            p.AddEdge(15,-13);
+
+            p.AddEdge(-13, 11);
 
             p.AddEdge(10, -10);
             p.AddEdge(11, -10);
@@ -123,8 +137,6 @@ namespace ProcessMining
             p.AddMarking(2);
             p.AddMarking(3);
             p.AddMarking(4);
-
-            //try connection between -6 to new node and delete -6 to 10 and add new node to -10
 
             var cost = p.GetValidShortestPath(-2, 12);
             Console.WriteLine(cost);
