@@ -25,6 +25,7 @@ public class AlignmentBased
             bool match = true;
             Console.WriteLine(" \n");
             minedNet.InitializeTokens();
+            minedNet.AddMarking(1);
             foreach (var step in trace.Key)
             {
                 
@@ -51,7 +52,8 @@ public class AlignmentBased
     void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet)
     {
         minedNet.InitializeTokens();
-      
+        minedNet.AddMarking(1);
+
 
     }
     void ShortestPath(Node start, Node end)
