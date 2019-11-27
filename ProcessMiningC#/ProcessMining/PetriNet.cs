@@ -248,38 +248,9 @@ namespace ProcessMining
             return _transitions[transitionId].parents.Select(node => node.id).ToList();
         }
 
-        public List<int> GetIdsOfParentTransactions(int transactionId)
-        {
-            var parentTransactionIds = new List<int>();
-
-            var parentPlacesIds = GetIdsOfParentPlaces(transactionId);
-            foreach (var parentPlaceId in parentPlacesIds)
-            {
-                var parentIds = _places[parentPlaceId].parents.Select(parent => parent.id).ToList();
-                parentTransactionIds.AddRange(parentIds);
-            }
-
-            return parentTransactionIds;
-        }
-
         public List<int> GetIdsOfChildPlaces(int transitionId)
         {
             return _transitions[transitionId].children.Select(node => node.id).ToList();
-        }
-
-
-        public List<int> GetIdsOfChildTransactions(int transactionId)
-        {
-            var childTransactionIds = new List<int>();
-
-            var childPlacesIds = GetIdsOfChildPlaces(transactionId);
-            foreach (var parentPlaceId in childPlacesIds)
-            {
-                var childIds = _places[parentPlaceId].children.Select(child => child.id).ToList();
-                childTransactionIds.AddRange(childIds);
-            }
-
-            return childTransactionIds;
         }
 
         public List<int> GetIdsOfChildTransitions(int placeId)
