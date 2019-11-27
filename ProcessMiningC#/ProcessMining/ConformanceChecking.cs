@@ -52,6 +52,7 @@ namespace ProcessMining
             foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)
             {
                 minedNet.InitializeTokens();
+                minedNet.AddMarking(1);
                 var sequenceTokenInfo = new TokenReplayInfo(produced: 1);
                 foreach (var step in trace.Key)
                 {
