@@ -139,10 +139,6 @@ namespace ProcessMining
             return 0 <= id ? "0" : _transitions[id].name;
         }
 
-        public string TransitionIdToName(int id)
-        {
-            return 0 <= id ? "0" : _transitions[id].name;
-        }
 
         public void AddEdge(int source, int target, int cost = 1)
         {
