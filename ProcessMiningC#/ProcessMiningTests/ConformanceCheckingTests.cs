@@ -39,7 +39,8 @@ namespace ProcessMining.Tests
             var casualFitness = CasualFootprints.CalculateCasualFootprintFitness(minedModel, log_noisy);
 
             // Assert
-            Assert.AreNotEqual(casualFitness, 1);
+            Assert.IsTrue(casualFitness > 0.21M);
+            Assert.IsTrue(casualFitness < 0.22M);
         }
 
         [TestMethod()]
@@ -62,10 +63,11 @@ namespace ProcessMining.Tests
             PetriNet minedModel = AlphaMiner.mine(log);
 
             // Act
-            var casualFitness = ConformanceChecking.TokenReplayFitness(minedModel, log);
+            var casualFitness = ConformanceChecking.TokenReplayFitness(minedModel, log_noisy);
 
             // Assert
-            Assert.AreEqual(casualFitness, 1);
+            Assert.IsTrue(casualFitness > 0.96);
+            Assert.IsTrue(casualFitness < 0.97);
         }
 
         [TestMethod()]

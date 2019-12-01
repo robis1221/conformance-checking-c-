@@ -7,10 +7,12 @@ namespace ProcessMining
     public static class CasualFootprints
     {
 
-        public static decimal CalculateCasualFootprintFitness(PetriNet petriNet, Dictionary<List<string>, int> trace_frequencies)
+        public static decimal CalculateCasualFootprintFitness(PetriNet petriNet, 
+            Dictionary<List<string>, int> trace_frequencies)
         {
             var petriNetCasualFootprintTable = CreateFootprintTable(petriNet);
-            var logCasualFootprintTable = CreateFootprintTable(trace_frequencies, petriNet.TransitionsNameToId);
+            var logCasualFootprintTable = CreateFootprintTable(trace_frequencies, 
+                petriNet.TransitionsNameToId);
 
             return CalculateFitness(petriNetCasualFootprintTable, logCasualFootprintTable);
         }
@@ -115,7 +117,8 @@ namespace ProcessMining
             return SuccessionType.Choice;
         }
 
-        private static decimal CalculateFitness(SuccessionType[,] footprintsTable1, SuccessionType[,] footprintsTable2)
+        private static decimal CalculateFitness(SuccessionType[,] 
+            footprintsTable1, SuccessionType[,] footprintsTable2)
         {
             if (footprintsTable1.Length != footprintsTable2.Length)
             {
