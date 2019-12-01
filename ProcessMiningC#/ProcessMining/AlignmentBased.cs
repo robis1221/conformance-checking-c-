@@ -6,6 +6,7 @@ public class AlignmentBased
 {
     double totalFitness = 0;
     int traceCount = 0;
+    bool completelyFits = false;
     public AlignmentBased()
     {
     }
@@ -36,7 +37,8 @@ public class AlignmentBased
                 {
                     match = false;
                    // Console.WriteLine(step);
-                    FindOptimalAlignment(trace,minedNet);
+                    FindOptimalAlignment(trace,minedNet,transitionId);
+                    completelyFits = false;
                     break;
                 }
                 minedNet.FireTransition(transitionId);
@@ -46,22 +48,20 @@ public class AlignmentBased
                 res.totalFitness += 1;
             }   
         }
-        Console.WriteLine(res.totalFitness / res.traceCount);
-        return (double) res.totalFitness / res.traceCount;
+        //    Console.WriteLine(res.totalFitness / res.traceCount);
+        if (completelyFits)
+        {
+            return (double)res.totalFitness / res.traceCount;
+        }
+        else
+        {
+            return -1;
+        }
     }
-    void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet)
+    void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet,int transitionId)
     {
-        minedNet.InitializeTokens();
-        minedNet.AddMarking(1);
+        Console.WriteLine("Optimal alignment: ");
+        Console.WriteLine("Cost of the optimal alignment: "+minedNet.GetValidShortestPath(transitionId, minedNet.GetSinkPlace()));
 
-
-    }
-    void ShortestPath(Node start, Node end)
-    {
-        //A* shortest path based on the standard cost function
-    }
-    void GetCost(KeyValuePair<List<string>,int> log_trace, KeyValuePair<List<string>,int> model_trace)
-    {
-        //Return cost between a log trace and a model trace
     }
 }
