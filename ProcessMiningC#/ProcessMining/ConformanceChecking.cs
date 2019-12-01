@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ProcessMining
 {
-    class ConformanceChecking
+    public class ConformanceChecking
     {
         private class TokenReplayInfo
         {

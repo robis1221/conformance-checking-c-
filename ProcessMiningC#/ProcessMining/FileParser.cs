@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace ProcessMining
 {
-    class FileParser
+    public class FileParser
     {
         class ListComparer<T> : IEqualityComparer<List<T>>
         {

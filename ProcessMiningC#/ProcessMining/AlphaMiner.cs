@@ -7,7 +7,7 @@ using Combinatorics.Collections;
 
 namespace ProcessMining
 {
-    class AlphaMiner
+    public class AlphaMiner
     {
         private static List<HashSet<string>> getSets(Dictionary<List<string>, int> trace_frequencies)
         {

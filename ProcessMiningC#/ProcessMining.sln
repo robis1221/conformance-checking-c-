@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.902
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMining", "ProcessMining\ProcessMining.csproj", "{7DF2CEC8-DCE6-40B1-B65A-37EF0A4570DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMiningTests", "ProcessMiningTests\ProcessMiningTests.csproj", "{96DC70BC-2F90-4DF4-8BF8-155C56D1DAD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7DF2CEC8-DCE6-40B1-B65A-37EF0A4570DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DF2CEC8-DCE6-40B1-B65A-37EF0A4570DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DF2CEC8-DCE6-40B1-B65A-37EF0A4570DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96DC70BC-2F90-4DF4-8BF8-155C56D1DAD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96DC70BC-2F90-4DF4-8BF8-155C56D1DAD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96DC70BC-2F90-4DF4-8BF8-155C56D1DAD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96DC70BC-2F90-4DF4-8BF8-155C56D1DAD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

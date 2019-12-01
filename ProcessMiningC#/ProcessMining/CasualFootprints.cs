@@ -19,7 +19,8 @@ namespace ProcessMining
         {
             var transactions = petriNet.Transitions;
 
-            var footprintTable = new SuccessionType[transactions.Count, transactions.Count];
+            var footprintTable = new SuccessionType[transactions.Count, 
+                                    transactions.Count];
 
             for (int i = 0; i < transactions.Count; i++)
             {
@@ -29,7 +30,8 @@ namespace ProcessMining
 
                 for (int j = 0; j < transactions.Count; j++)
                 {
-                    footprintTable[i, j] = DetermineSuccessionType(childrenIds, parentIds, -(j + 1));
+                    footprintTable[i, j] = DetermineSuccessionType(childrenIds, 
+                                            parentIds, -(j + 1));
                 }
             }
             return footprintTable;

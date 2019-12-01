@@ -6,18 +6,14 @@ public class AlignmentBased
 {
     double totalFitness = 0;
     int traceCount = 0;
-    bool completelyFits = true;
     public AlignmentBased()
     {
     }
-    public double TestAlignment(string logPath, string logPath_noisy)
-    {
-        Dictionary<List<string>, int> trace_frequencies = FileParser.ParseXES(
-              logPath);
-        Dictionary<List<string>, int> trace_frequencies_noisy =
-            FileParser.ParseXES(
-                logPath_noisy);
+    public static double TestAlignment(Dictionary<List<string>, int> trace_frequencies, 
+        Dictionary<List<string>, int> trace_frequencies_noisy)
+    {        
         var minedNet = AlphaMiner.mine(trace_frequencies);
+        var completelyFits = true;
 
         AlignmentBased res = new AlignmentBased();
         
@@ -25,9 +21,9 @@ public class AlignmentBased
         {
             string alignment = "";
             res.traceCount += 1;
-            bool match = true;
+            bool match = true;            
             // Console.WriteLine(" \n");
-            
+
             minedNet.InitializeTokens();
             minedNet.AddMarking(1);
             foreach (var step in trace.Key)
@@ -66,7 +62,7 @@ public class AlignmentBased
             return -1;
         }
     }
-    void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet,int transitionId,string alignment)
+    static void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet,int transitionId,string alignment)
     {
         var optimal = minedNet.GetValidShortestPath(transitionId, minedNet.GetSinkPlace());
         for(int i = 0; i < optimal.Count; i++)
