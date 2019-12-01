@@ -139,7 +139,10 @@ namespace ProcessMining
             p.AddMarking(4);
 
             var cost = p.GetValidShortestPath(-2, 12);
-            Console.WriteLine(cost);
+            for(int i = 0; i < cost.Count; i++)
+            {
+                Console.WriteLine(p.TransitionIdToName(cost[i]));
+            }
 
         }
 
@@ -195,26 +198,29 @@ namespace ProcessMining
 
             var cost = p.GetValidShortestPath(-2, 7);
 
+
         }
 
         static void Main(string[] args)
         {
             string logPath =
-                @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes";
+                @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes";
+            string logPath_noisy =
+                @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log-noisy.xes";
 
             AlphaMiner.test_alpha_miner(logPath);
-            ConformanceChecking.TestConformanceChecking();
+          //  ConformanceChecking.TestConformanceChecking();
 
                 //"C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes";
 
 
 
-            TestShortestPathWithVeryComplexModel();
+            //TestShortestPathWithVeryComplexModel();
 
             //AlphaMiner.test_alpha_miner(logPath);
             // ConformanceChecking.TestConformanceChecking();
-            //AlignmentBased ab = new AlignmentBased();
-            //ab.TestAlignment();
+            AlignmentBased ab = new AlignmentBased();
+            ab.TestAlignment(logPath,logPath_noisy);
         }
     }
 }

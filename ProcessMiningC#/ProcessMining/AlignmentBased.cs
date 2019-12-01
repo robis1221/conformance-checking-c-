@@ -6,40 +6,47 @@ public class AlignmentBased
 {
     double totalFitness = 0;
     int traceCount = 0;
-    bool completelyFits = false;
+    bool completelyFits = true;
     public AlignmentBased()
     {
     }
-    public double TestAlignment()
+    public double TestAlignment(string logPath, string logPath_noisy)
     {
         Dictionary<List<string>, int> trace_frequencies = FileParser.ParseXES(
-              "D:\\DTU\\conformance-checking-c-\\ProcessMiningC#\\ProcessMining\\extension-log.xes");
+              logPath);
         Dictionary<List<string>, int> trace_frequencies_noisy =
             FileParser.ParseXES(
-                "D:\\DTU\\conformance-checking-c-\\ProcessMiningC#\\ProcessMining\\extension-log-noisy.xes");
+                logPath_noisy);
         var minedNet = AlphaMiner.mine(trace_frequencies);
 
         AlignmentBased res = new AlignmentBased();
-        foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)
+        
+        foreach (KeyValuePair<List<string>, int> trace in trace_frequencies_noisy)
         {
-        res.traceCount += 1;
+            string alignment = "";
+            res.traceCount += 1;
             bool match = true;
-            Console.WriteLine(" \n");
+            // Console.WriteLine(" \n");
+            
             minedNet.InitializeTokens();
             minedNet.AddMarking(1);
             foreach (var step in trace.Key)
             {
                 
-                Console.Write(step+"-");
+              // Console.Write(step+"-");
                 var transitionId = minedNet.TransitionNameToId(step);
                 var isEnabled = minedNet.IsEnabled(transitionId);
                 if (!isEnabled)
                 {
                     match = false;
-                   // Console.WriteLine(step);
-                    FindOptimalAlignment(trace,minedNet,transitionId);
+                 //  Console.WriteLine(step);
+                    FindOptimalAlignment(trace,minedNet,transitionId,alignment);
                     completelyFits = false;
                     break;
+                }
+                else
+                {
+                    alignment += step+" - ";
                 }
                 minedNet.FireTransition(transitionId);
             }
@@ -48,9 +55,10 @@ public class AlignmentBased
                 res.totalFitness += 1;
             }   
         }
-        //    Console.WriteLine(res.totalFitness / res.traceCount);
+        
         if (completelyFits)
         {
+            Console.WriteLine("Fitness: " + res.totalFitness / res.traceCount);
             return (double)res.totalFitness / res.traceCount;
         }
         else
@@ -58,10 +66,23 @@ public class AlignmentBased
             return -1;
         }
     }
-    void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet,int transitionId)
+    void FindOptimalAlignment(KeyValuePair<List<string>,int> trace,PetriNet minedNet,int transitionId,string alignment)
     {
-        Console.WriteLine("Optimal alignment: ");
-        Console.WriteLine("Cost of the optimal alignment: "+minedNet.GetValidShortestPath(transitionId, minedNet.GetSinkPlace()));
+        var optimal = minedNet.GetValidShortestPath(transitionId, minedNet.GetSinkPlace());
+        for(int i = 0; i < optimal.Count; i++)
+        {
+          //  Console.WriteLine(minedNet.TransitionIdToName(optimal[i]));
+            alignment = alignment + minedNet.TransitionIdToName(optimal[i])+" - ";
+        }
+        var traceString = "";
+        foreach(var step in trace.Key)
+        {
+            traceString = traceString + step + " - ";
+        }
+        Console.WriteLine("Deviating trace: "+traceString.Substring(0, traceString.Length-3));
+        Console.WriteLine("Optimal alignment: "+alignment.Substring(0, alignment.Length-3));
+        //Console.WriteLine(trace);
+        //Console.WriteLine("Cost of the optimal alignment: ");
 
     }
 }

@@ -106,10 +106,10 @@ namespace ProcessMining
         public static void TestConformanceChecking()
         {
             Dictionary<List<string>, int> log = FileParser.ParseXES(
-                @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes");
+                @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes");
             Dictionary<List<string>, int> log_noisy =
                 FileParser.ParseXES(
-                    @"C:\ProcessMining\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log-noisy.xes");
+                    @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log-noisy.xes");
 
             PetriNet minedModel = AlphaMiner.mine(log);
             
