@@ -7,7 +7,7 @@ using Combinatorics.Collections;
 
 namespace ProcessMining
 {
-    class AlphaMiner
+    public class AlphaMiner
     {
         private static List<HashSet<string>> getSets(Dictionary<List<string>, int> trace_frequencies)
         {
@@ -34,7 +34,7 @@ namespace ProcessMining
             return new List<HashSet<string>>(){startTransitions,transitionSet,endTransitions};
         }
 
-        private static HashSet<Tuple<string, string>> GetDirectSuccessions(Dictionary<List<string>, int> trace_frequencies)
+        public static HashSet<Tuple<string, string>> GetDirectSuccessions(Dictionary<List<string>, int> trace_frequencies)
         {
             HashSet<Tuple<string, string>> directSuccession = new HashSet<Tuple<string, string>>();
             foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)
@@ -295,10 +295,10 @@ namespace ProcessMining
 
             List<string> trace =new List<string>(){"record issue", "inspection", "intervention authorization", "work mandate", "work completion", "issue completion"};
 
-            var cost = minedModel.GetShortestPath(minedModel.TransitionNameToId("inspection"),
-                minedModel.TransitionNameToId("issue completion"), null);
+            //var cost = minedModel.GetShortestPath(minedModel.TransitionNameToId("inspection"),
+            //    minedModel.TransitionNameToId("issue completion"), null);
 
-            Console.WriteLine(cost);
+            //Console.WriteLine(cost);
 
             foreach (var a in trace)
             {

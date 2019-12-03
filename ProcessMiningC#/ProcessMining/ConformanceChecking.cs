@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProcessMining
 {
-    class ConformanceChecking
+    public class ConformanceChecking
     {
         private class TokenReplayInfo
         {
@@ -46,12 +43,19 @@ namespace ProcessMining
             }
         }
 
-        public static double TokenReplayFitness(Dictionary<List<string>, int> trace_frequencies, PetriNet minedNet)
+        /// <summary>
+        /// Token replay technique
+        /// </summary>
+        /// <param name="minedNet">Mined model</param>
+        /// <param name="trace_frequencies">Dictionary holding the frequencies from the trance</param>
+        /// <returns>Fitness E [0;1]</returns>
+        public static double TokenReplayFitness(PetriNet minedNet, Dictionary<List<string>, int> trace_frequencies)
         {
             var result = new TokenReplayInfo();
             foreach (KeyValuePair<List<string>, int> trace in trace_frequencies)
             {
                 minedNet.InitializeTokens();
+                minedNet.AddMarking(1);
                 var sequenceTokenInfo = new TokenReplayInfo(produced: 1);
                 foreach (var step in trace.Key)
                 {
@@ -60,7 +64,7 @@ namespace ProcessMining
 
                     if (!isEnabled)
                     {
-                        //  produce the correct amount of missing tokens
+                        // produce the correct amount of missing tokens
                         var placesBefore = minedNet.GetIdsOfParentPlaces(transitionId);
                         foreach (var placeId in placesBefore)
                         {
@@ -102,17 +106,97 @@ namespace ProcessMining
             return result.ComputeFitness();
         }
 
+        /// <summary>
+        /// Token replay technique
+        /// </summary>
+        /// <param name="minedNet">Mined model</param>
+        /// <param name="pathToLogFile">path to the log file</param>
+        /// <returns>Fitness E [0;1]</returns>
+        public static double TokenReplayFitness(PetriNet minedNet, string pathToLogFile)
+        {
+            Dictionary<List<string>, int> log = FileParser.ParseXES(pathToLogFile);
+            return TokenReplayFitness(minedNet, log);
+        }
+
+        /// <summary>
+        /// Token replay technique
+        /// </summary>
+        /// <param name="pathToLogToBeMined"></param>
+        /// <param name="pathToLogFile">path to the log file</param>
+        /// <returns>Fitness E [0;1]</returns>
+        public static double TokenReplayFitness(string pathToLogToBeMined, string pathToLogFile)
+        {
+            Dictionary<List<string>, int> log = FileParser.ParseXES(pathToLogToBeMined);
+            Dictionary<List<string>, int> logNoisy = FileParser.ParseXES(pathToLogFile);
+
+            PetriNet minedModel = AlphaMiner.mine(log);
+
+            return (double)TokenReplayFitness(minedModel, logNoisy);
+        }
+
+        /// <summary>
+        /// Interface for calculating Casual Footprint fitness
+        /// </summary>
+        /// <param name="net">Petri net representing the model</param>
+        /// <param name="logDict">Sequence dictionary of the log</param>
+        /// <returns>fitness E [0,1]</returns>
+        public static double CalculateCasualFootprintFitness(PetriNet net, Dictionary<List<string>, int> logDict)
+        {
+            return (double)CasualFootprints.CalculateCasualFootprintFitness(net, logDict);
+        }
+
+        /// <summary>
+        /// Interface for calculating Casual Footprint fitness
+        /// </summary>
+        /// <param name="net">Petri net representing the model</param>
+        /// <param name="pathToLogFile"></param>
+        /// <returns>fitness E [0,1]</returns>
+        public static double CalculateCasualFootprintFitness(PetriNet net, string pathToLogFile)
+        {
+            Dictionary<List<string>, int> log = FileParser.ParseXES(pathToLogFile);
+            return (double)CasualFootprints.CalculateCasualFootprintFitness(net, log);
+        }
+
+        /// <summary>
+        /// Interface for calculating Casual Footprint fitness
+        /// </summary>
+        /// <param name="pathToLogToBeMined">Path to the log file, from which we will mine the model using Petri net</param>
+        /// <param name="pathToLogFile"></param>
+        /// <returns>fitness E [0,1]</returns>
+        public static double CalculateCasualFootprintFitness(string pathToLogToBeMined, string pathToLogFile)
+        {
+            Dictionary<List<string>, int> log = FileParser.ParseXES(pathToLogToBeMined);
+            Dictionary<List<string>, int> logNoisy = FileParser.ParseXES(pathToLogFile);
+
+            PetriNet minedModel = AlphaMiner.mine(log);
+
+            return (double)CasualFootprints.CalculateCasualFootprintFitness(minedModel, logNoisy);
+        }
+
+
+        /// <summary>
+        /// Test
+        /// </summary>
         public static void TestConformanceChecking()
         {
-            var log = FileParser.ParseXES(
-                "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log.xes");
-            var log_noisy =
+            Dictionary<List<string>, int> log = FileParser.ParseXES(
+                @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log.xes");
+            Dictionary<List<string>, int> log_noisy =
                 FileParser.ParseXES(
-                    "C:\\Users\\Nikolay Dobrev\\source\\repos\\ProcessMining\\ProcessMining\\extension-log-noisy.xes");
+                    @"D:\New folder\conformance-checking-c-\ProcessMiningC#\ProcessMining\extension-log-noisy.xes");
 
-            var minedModel = AlphaMiner.mine(log);
-            Console.WriteLine(ConformanceChecking.TokenReplayFitness(log,minedModel));
-            Console.WriteLine(ConformanceChecking.TokenReplayFitness(log_noisy, minedModel));
+            PetriNet minedModel = AlphaMiner.mine(log);
+            
+            var casualFitness = CasualFootprints.CalculateCasualFootprintFitness(minedModel, log);
+            var casualFitnessNoisy = CasualFootprints.CalculateCasualFootprintFitness(minedModel, log_noisy);
+
+            Console.WriteLine($"CasualFootprint fitness of the same logs and model: {casualFitness}");
+            Console.WriteLine($"CasualFootprint fitness of the model and noisy logs: {casualFitnessNoisy}");
+
+            Console.WriteLine(ConformanceChecking.TokenReplayFitness(minedModel,log));
+            Console.WriteLine(ConformanceChecking.TokenReplayFitness(minedModel,log_noisy));
+
+            Console.ReadLine();
             
         }
     }
